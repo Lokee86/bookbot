@@ -3,9 +3,11 @@ def main():
     text = read_book(path)
     count = word_count(text)
     characters = characters_used(text)
-    print(read_book(path))
-    print(f"This document contains {count} words.")
-    print(characters)
+    print(f"--- Begin report of {path} ---")
+    print(f"{count} words found in the document")
+    for char, count in print_report(characters):
+        print(f"The '{char}' character was found {count} times")
+    print("--- End report ---")
 
 def read_book(path):
     with open(path) as b:
@@ -26,5 +28,18 @@ def characters_used(text):
             counted_characters[c] = 1
     return counted_characters
 
+def print_report(characters):
+    char_list = []
+    for c in characters:
+        char_list.append((c, characters[c]))
+    filter_list = char_list[:]
+    for char, count in char_list:
+        if not char.isalpha():
+            filter_list.remove((char, count))
+    def sort(filter_list):
+        return filter_list[1]
+    filter_list.sort(key=sort, reverse=True)
+    return filter_list
+    
 
 main()
