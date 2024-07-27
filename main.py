@@ -2,7 +2,7 @@
 #should return 0 if none are found.
 
 def path_input():
-    path = input("Enter a path to a text file(Enter q to quit):")
+    path = input("Enter a path to a text file(Enter q to quit):").strip().lower()
     if path == "":
         raise ValueError("No path entered. Must enter a valid file path.")
     elif path.lower() == "q":
@@ -44,41 +44,53 @@ def print_report(characters):
     
 def word_search(search_term, text):
     count = 0
-    search_text = text.split()
+    search_text = [word.lower() for word in text.split()]
     for word in search_text:
         if word == search_term:
             count += 1
     return count, search_term
 
 def main():
-    try:
-        path = path_input().strip()
-        if path is None:
-            return print("Session Ended")
+    while True:
         try:
-            text = read_book(path)
-        except FileNotFoundError:
-            print(f"An error occured: Bad path or file does not exist.")
+            path = path_input().strip().lower()
+            if path is None:
+                return print("Session Ended")
+            try:
+                text = read_book(path)
+            except FileNotFoundError:
+                print(f"An error occured: Bad path or file does not exist.")
+                return print("Session Ended")
+        except ValueError as e:
+            print(e)
+            return print("Session Ended") 
+        except Exception as e:
+            print(f"An error occured:{e}")
             return print("Session Ended")
-    except ValueError as e:
-        print(e)
-        return print("Session Ended") 
-    except Exception as e:
-        print(f"An error occured:{e}")
-        return print("Session Ended")
+        
+        count = word_count(text)
+        characters = characters_used(text)
+        
+        print(f"--- Begin report of {path} ---")
+        print(f"{count} words found in the document")
+        
+        for char, count in print_report(characters):
+            print(f"The '{char}' character was found {count} times")
     
-    count = word_count(text)
-    characters = characters_used(text)
-    
-    print(f"--- Begin report of {path} ---")
-    print(f"{count} words found in the document")
-    
-    for char, count in print_report(characters):
-        print(f"The '{char}' character was found {count} times")
-   
-    print("--- End report ---")
+        print("--- End report ---")
 
-    counted_words, search_term = word_search(input("Word search: ").strip(),text)
-    print(f"{counted_words} instances of {search_term}")
+        while True:
+            search_term = input("Search for a word search: ").strip().lower()
+            counted_words, search_term = word_search(search_term, text)
+            print(f"{counted_words} instances of {search_term}")
+            
+            search_again = input("Search for another word?(y/n)): ").strip().lower()
+            if search_again != "y":
+                break
+
+        continue_loop = input("Do you want to analyze another file? (y/n): ").strip().lower()
+        if continue_loop != "y":
+            print("Session Ended")
+            break
 
 main()
