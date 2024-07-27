@@ -1,13 +1,39 @@
-def main():    
-    path = "books/frankenstein.txt"
-    text = read_book(path)
+def main():
+    try:
+        path = path_input()
+        if path is None:
+            return print("Session Ended")
+        try:
+            text = read_book(path)
+        except FileNotFoundError:
+            print(f"An error occured: Bad path or file does not exist.")
+            return print("Session Ended")
+    except ValueError as e:
+        print(e)
+        return print("Session Ended") 
+    except Exception as e:
+        print(f"An error occured:{e}")
+        return print("Session Ended")
+    
     count = word_count(text)
     characters = characters_used(text)
+    
     print(f"--- Begin report of {path} ---")
     print(f"{count} words found in the document")
+    
     for char, count in print_report(characters):
         print(f"The '{char}' character was found {count} times")
+   
     print("--- End report ---")
+
+def path_input():
+    path = input("Enter a path to a text file(Enter q to quit):")
+    if path == "":
+        raise ValueError("No path entered. Must enter a valid file path.")
+    elif path.lower() == "q":
+        return None
+    else:
+        return path
 
 def read_book(path):
     with open(path) as b:
