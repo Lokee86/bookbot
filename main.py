@@ -2,8 +2,8 @@ def read_book(path):
     try:
         with open(path) as b:
             content = b.read()
-    except FileNotFoundError:
-        print("Invalid file path: Analyzing Entry instead.")
+    except Exception:
+        print("Invalid file path: Analyzing entry instead...")
         content = path   
     characters = characters_used(content)    
     count = content.lower().split()
@@ -52,7 +52,7 @@ def main():
             print(e)
             continue
         
-        print(f"--- Begin report of {path} ---")
+        print(f"--- Begin report of {path[:25]} ---")
         print(f"{count} words found in the document")
         for char, count in print_report(characters):
             print(f"The '{char}' character was found {count} times")
