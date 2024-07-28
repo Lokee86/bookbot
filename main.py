@@ -1,12 +1,9 @@
-#Add feature to allow for searching for the number of times any given word is used.
-#should return 0 if none are found.
-
 def path_input():
     path = input("Enter a path to a text file(Enter q to quit):").strip().lower()
     if path == "":
         raise ValueError("No path entered. Must enter a valid file path.")
     elif path.lower() == "q":
-        return None
+        return path
     else:
         return path
 
@@ -54,19 +51,22 @@ def main():
     while True:
         try:
             path = path_input().strip().lower()
-            if path is None:
-                return print("Session Ended")
+            if path == "q":
+                return print("Session Ended.")
+            elif path is None:
+                print("Must enter a valid file path.")
+                continue
             try:
                 text = read_book(path)
             except FileNotFoundError:
                 print(f"An error occured: Bad path or file does not exist.")
-                return print("Session Ended")
+                continue
         except ValueError as e:
             print(e)
-            return print("Session Ended") 
+            continue
         except Exception as e:
             print(f"An error occured:{e}")
-            return print("Session Ended")
+            continue
         
         count = word_count(text)
         characters = characters_used(text)
