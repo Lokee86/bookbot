@@ -1,10 +1,3 @@
-def path_input():
-    path = input("Enter a path to a text file(Enter q to quit):")
-    if path == "":
-        raise ValueError("No path entered. Must enter a valid file path.")
-    else:
-        return path
-
 def read_book(path):
     with open(path) as b:
         return b.read()    
@@ -47,7 +40,7 @@ def word_search(search_term, text):
 def main():
     while True:
         try:
-            path = path_input()
+            path = input("Enter a path to a text file(Enter q to quit):")
             if path == "q":
                 return print("Session Ended.")
             elif path is None:
