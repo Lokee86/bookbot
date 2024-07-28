@@ -1,10 +1,13 @@
 def read_book(path):
-    with open(path) as b:
-        return b.read()    
-
-def word_count(text):
-    count = text.split()
-    return len(count)
+    try:
+        with open(path) as b:
+            content = b.read()
+    except FileNotFoundError:
+        print("Invalid file path: Analyzing Entry instead.")
+        content = path   
+    characters = characters_used(content)    
+    count = content.lower().split()
+    return len(count), count, characters
 
 def characters_used(text):
     counted_characters = {}
@@ -29,13 +32,11 @@ def print_report(characters):
     
 def word_search(search_term, text):
     search_term = search_term.lower()
-    text = text.lower()
     count = 0
-    search_text = text.split()
-    for word in search_text:
+    for word in text:
         if word == search_term:
             count += 1
-    return count, search_term
+    return count
 
 def main():
     while True:
@@ -46,29 +47,20 @@ def main():
             elif path is None:
                 print("Must enter a valid file path.")
                 continue
-            try:
-                text = read_book(path)
-            except FileNotFoundError:
-                print("Invalid file path: Analyzing Entry instead.")
-                text = path
+            count, text, characters = read_book(path)
         except Exception as e:
             print(e)
             continue
         
-        count = word_count(text)
-        characters = characters_used(text)
-        
         print(f"--- Begin report of {path} ---")
         print(f"{count} words found in the document")
-        
         for char, count in print_report(characters):
             print(f"The '{char}' character was found {count} times")
-    
         print("--- End report ---")
 
         while True:
             search_term = input("Search for a word search: ")
-            counted_words, search_term = word_search(search_term, text)
+            counted_words = word_search(search_term, text)
             print(f"{counted_words} instances of {search_term}")
             
             search_again = input("Search for another word?(y/n)): ").strip().lower()
@@ -79,6 +71,5 @@ def main():
         if continue_loop != "y":
             print("Session Ended")
             break
-
 
 main()
