@@ -17,6 +17,7 @@ def read_book():
             file_name = "Input String"
     else:
         book = path
+        file_name = "Input String"
     return book
 
 # obtain and cache counts for line, words, unique words, and the number of title lines present
@@ -170,7 +171,9 @@ def print_data(option = 8, order = True):
             print(f"----------------Beginning Report of {file_name}-----------------------")
             print(f"There are {obtain_counts()[0]} lines of text, {obtain_counts()[1]} words\n{obtain_counts()[2]} unique words, and {obtain_counts()[3]} title lines\nin the document.")
             for letter in character_lists(order)[0]:
-                    print(f"The letter '{letter[0]}' appears {letter[1]} times.")
+                print(f"The uppercase letter '{letter[0]}' appears {letter[1]} times.")
+            for letter in character_lists(order)[1]:
+                print(f"The lowercase letter '{letter[0]}' appears {letter[1]} times.")
             for number in character_lists(order)[2]:
                     print(f"The number '{number[0]}' appears {number[1]} times.")
             for char in character_lists(order)[3]:
@@ -220,8 +223,7 @@ def search(term):
 
 def main():
     global path
-    path = "books/frankenstein.txt"
-    #path = input("Please enter a path to a .txt file or enter a string to analyze:").replace("\\", "/")
+    path = input("Please enter a path to a .txt file or enter a string to analyze: ").replace("\\", "/")
     while True:
         alpha_freq = input("Would you like to sort the results alphabetically (1), or by frequency (2)? ")
         while True:        
