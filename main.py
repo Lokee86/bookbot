@@ -2,7 +2,7 @@ from functools import lru_cache
 
 @lru_cache
 def read_book():
-    #nonlocal path
+    #path argument is globalized in main()
     with open(path) as f:
         book = f.read()
         return book
@@ -13,31 +13,39 @@ def obtain_counts():
     lines = read_book().split("\n")
     line_count = len(lines)
     words = len(read_book().split())
-    unique_words = len(set(read_book().split()))
+    unique_words = len(set(read_book().lower().split()))
     for line in lines:
         if line.istitle():
             chapters += 1
     return line_count, words, unique_words, chapters
 
 @lru_cache
-def count_characters():
+def count_characters(option = True):
     character_counts = {}
     for character in read_book():
         if character not in character_counts:
             character_counts[character] = 1
         else:
             character_counts[character] += 1
-    return sorted(list(character_counts.items()), key=lambda x: x[1], reverse=True)
+    if option:
+        return sorted(list(character_counts.items()), key=lambda x: x[1], reverse=True)
+    return sorted(list(character_counts.items()), key=lambda x: x[0])
 
 @lru_cache
-def count_words():
+def count_words(option = True):
     word_counts = {}
-    for character in read_book().split():
-        if word not in word_counts:
-            word_counts[word] = 1
+    stripping_chars = ""
+    for char in character_lists()[2]:
+        stripping_chars += char[0]
+    for word in read_book().split():
+        stripped_word = word.lower().strip(stripping_chars)
+        if stripped_word not in word_counts:
+            word_counts[stripped_word] = 1
         else:
-            word_counts[word] += 1
-    return sorted(list(word_counts.items()), key=lambda x: x[1], reverse=True)
+            word_counts[stripped_word] += 1
+    if option:
+        return sorted(list(word_counts.items()), key=lambda x: x[1], reverse=True)
+    return sorted(list(word_counts.items()), key=lambda x: x[1])
 
 @lru_cache
 def character_lists():
@@ -76,6 +84,13 @@ def print_lists(option):
                     else:
                         print(f"There are {char[1]} newline characters or returns.")
             case 5:
+                for word in count_words():
+                    if word[0] == "i":
+                        print(f"The word 'I' was used {word[1]} times.")
+                    else:
+                        print(f"The word '{word[0]}' was used {word[1]} times.")
+            #Code is repeated here, because I determined it would take the same amount of code to avoid repeating it.
+            case 6:
                 for letter in character_lists()[0]:
                     print(f"The letter '{letter[0]}' appears {letter[1]} times.")
                 for number in character_lists()[1]:
@@ -87,6 +102,11 @@ def print_lists(option):
                         print(f"There are {char[1]} spaces.")
                     else:
                         print(f"There are {char[1]} newline characters or returns.")
+                for word in count_words():
+                    if word[0] == "i":
+                        print(f"The word 'I' was used {word[1]} times.")
+                    else:
+                        print(f"The word '{word[0]}' was used {word[1]} times.")
             case _:
                 print("Invalid Option, Please Choose a Valid Option.")
                 return
@@ -102,6 +122,6 @@ def main():
     #path = input("Enter Path:").replace("\\", "/")
     file_name = path.split("/")[-1]
     print_stats()
-    print_lists(1)
+    print(character_lists())
 
 main()
