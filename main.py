@@ -121,55 +121,51 @@ def choose_report():
     print("8. All of the above choices. (Excluding #7)")
     return input("Please choose what you would like to report from the above list. (May only choose 1)." )
 
+def report_header():
+    print(f"----------------Beginning Report of {file_name}----------------------")
+    print(f"There are {obtain_counts()[0]} lines of text, {obtain_counts()[1]} words\n{obtain_counts()[2]} unique words, and {obtain_counts()[3]} title lines\nin the document.")
+
 # produces an output based on the selected option
 def print_data(option = 8, order = True):
     read_book() 
     match option:
         case "1":
-            print(f"----------------Beginning Report of {file_name}----------------------")
-            print(f"There are {obtain_counts()[0]} lines of text, {obtain_counts()[1]} words\n{obtain_counts()[2]} unique words, and {obtain_counts()[3]} title lines\nin the document.")
+            report_header()
             for letter in character_lists(order)[0]:
                 print(f"The uppercase letter '{letter[0]}' appears {letter[1]} times.")
         case "2":
-            print(f"----------------Beginning Report of {file_name}----------------------")
-            print(f"There are {obtain_counts()[0]} lines of text, {obtain_counts()[1]} words\n{obtain_counts()[2]} unique words, and {obtain_counts()[3]} title lines\nin the document.")
+            report_header()
             for letter in character_lists(order)[1]:
                 print(f"The lowercase letter '{letter[0]}' appears {letter[1]} times.")
         case "3":
-            print(f"----------------Beginning Report of {file_name}----------------------")
-            print(f"There are {obtain_counts()[0]} lines of text, {obtain_counts()[1]} words\n{obtain_counts()[2]} unique words, and {obtain_counts()[3]} title lines\nin the document.")
+            report_header()
             for number in character_lists(order)[2]:
                 print(f"The number '{number[0]}' appears {number[1]} times.")
         case "4":
-            print(f"----------------Beginning Report of {file_name}----------------------")
-            print(f"There are {obtain_counts()[0]} lines of text, {obtain_counts()[1]} words\n{obtain_counts()[2]} unique words, and {obtain_counts()[3]} title lines\nin the document.")
+            report_header()
             for char in character_lists(order)[3]:
                 print(f"The character '{char[0]}' appears {char[1]} times.")
         case "5":
-            print(f"----------------Beginning Report of {file_name}----------------------")
-            print(f"There are {obtain_counts()[0]} lines of text, {obtain_counts()[1]} words\n{obtain_counts()[2]} unique words, and {obtain_counts()[3]} title lines\nin the document.")
+            report_header()
             for char in character_lists(order)[4]:
                 if char[0] == " ":
                     print(f"There are {char[1]} spaces.")
                 else:
                     print(f"There are {char[1]} newline characters or returns.")
         case "6":
-            print(f"----------------Beginning Report of {file_name}----------------------")
-            print(f"There are {obtain_counts()[0]} lines of text, {obtain_counts()[1]} words\n{obtain_counts()[2]} unique words, and {obtain_counts()[3]} title lines\nin the document.")
+            report_header()
             for word in count_words(order)[0]:
                 if word[0] == "i":
                     print(f"The word 'I' was used {word[1]} times.")
                 else:
                     print(f"The word '{word[0]}' was used {word[1]} times.")
         case "7":
-            print(f"----------------Beginning Report of {file_name}----------------------")
-            print(f"There are {obtain_counts()[0]} lines of text, {obtain_counts()[1]} words\n{obtain_counts()[2]} unique words, and {obtain_counts()[3]} title lines\nin the document.")
+            report_header()
             for letter in all_letter_counts(order):
                 print(f"The letter '{letter[0]}' appears {letter[1]} times.")
         # Code is repeated here, because I determined it would take the same amount of code to avoid repeating it.
         case "8":
-            print(f"----------------Beginning Report of {file_name}-----------------------")
-            print(f"There are {obtain_counts()[0]} lines of text, {obtain_counts()[1]} words\n{obtain_counts()[2]} unique words, and {obtain_counts()[3]} title lines\nin the document.")
+            report_header()
             for letter in character_lists(order)[0]:
                 print(f"The uppercase letter '{letter[0]}' appears {letter[1]} times.")
             for letter in character_lists(order)[1]:
@@ -273,9 +269,4 @@ def main():
             print("Session Ended. Thank you for using Bookbot!")
             return
         
-
-    
-
-
-
 main()
