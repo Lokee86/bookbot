@@ -1,7 +1,4 @@
 from functools import lru_cache
-import re
-
-path = "books/frankenstein.txt"
 
 @lru_cache
 def read_book():
@@ -10,6 +7,7 @@ def read_book():
         book = f.read()
         return book
 
+@lru_cache
 def obtain_counts():
     chapters = 0
     lines = read_book().split("\n")
@@ -92,14 +90,18 @@ def print_lists(option):
             case _:
                 print("Invalid Option, Please Choose a Valid Option.")
                 return
-    
+
+def print_stats():
+    print(
+        f"There are {obtain_counts()[0]} lines of text, {obtain_counts()[1]} words\n{obtain_counts()[2]} unique words, and {obtain_counts()[3]} title lines\nin the document."
+          )    
 
 def main():
+    global path
+    path = "books/frankenstein.txt"
+    #path = input("Enter Path:").replace("\\", "/")
+    file_name = path.split("/")[-1]
+    print_stats()
     print_lists(1)
-    print_lists(2)
-    print_lists(3)
-    print_lists(4)
-    print_lists(5)
-    print_lists(6)
 
 main()
