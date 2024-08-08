@@ -4,16 +4,19 @@ from contextlib import redirect_stdout
 # path is read and the results cached
 @lru_cache
 def read_book():
-    #path argument is globalized in main()
+    #path variable is globalized in main()
     global file_name
-    try:
-        with open(path) as f:
-            book = f.read()
-            file_name = path.split("/")[-1]
-    except Exception:
-        print("Invalid file path, analyzing entry instead")
+    if path.split(".")[-1] == "txt":
+        try:
+            with open(path) as f:
+                book = f.read()
+                file_name = path.split("/")[-1]
+        except Exception:
+            print("Invalid file path, analyzing entry instead")
+            book = path
+            file_name = "Input String"
+    else:
         book = path
-        file_name = "Input String"
     return book
 
 # obtain and cache counts for line, words, unique words, and the number of title lines present
@@ -66,16 +69,16 @@ def count_words(option = True):
 # sorts and caches counted characters into seperate lists of numbers, letters,
 # ASCII characters, and invisible characters (spaces and newlines)
 @lru_cache
-def character_lists():
+def character_lists(option = True):
     upper_chars = []
     lower_chars = []
     number_chars = []
     other_chars = []
     invis_chars = []
-    for character in count_characters():
+    for character in count_characters(option):
         if character[0].isalpha() and character[0].isupper():
             upper_chars.append(character)
-        elif character[0].isalpha():
+        elif character[0].isalpha() and character[0].islower():
             lower_chars.append(character)
         elif character[0].isdecimal():
             number_chars.append(character)
@@ -105,48 +108,74 @@ def clear_cache():
     for func in cache_list:
         func.cache_clear()
 
+# allows for a choice of output report
+def choose_report():
+    print("1. All uppercase letters and their frequency.")
+    print("2. All lowercase letters and their frequency.")
+    print("3. All numerals and their frequency.")
+    print("4. All non-alphanumeric ASCII characters and their frequency.")
+    print("5. All spaces and newline characters (returns) and their frequency.")
+    print("6. All unique words and their frequency.")
+    print("7. All letters and their frequency.")
+    print("8. All of the above choices. (Excluding #7)")
+    return input("Please choose what you would like to report from the above list. (May only choose 1)." )
+
 # produces an output based on the selected option
-def print_data(option = 8):
-    read_book()        
-    print(f"-----------------Beginning Report of {file_name}-----------------------")
-    print(f"There are {obtain_counts()[0]} lines of text, {obtain_counts()[1]} words\n{obtain_counts()[2]} unique words, and {obtain_counts()[3]} title lines\nin the document.")
+def print_data(option = 8, order = True):
+    read_book() 
     match option:
-        case 1:
-            for letter in character_lists()[0]:
+        case "1":
+            print(f"----------------Beginning Report of {file_name}----------------------")
+            print(f"There are {obtain_counts()[0]} lines of text, {obtain_counts()[1]} words\n{obtain_counts()[2]} unique words, and {obtain_counts()[3]} title lines\nin the document.")
+            for letter in character_lists(order)[0]:
                 print(f"The uppercase letter '{letter[0]}' appears {letter[1]} times.")
-        case 2:
-            for letter in character_lists()[0]:
-                print(f"The uppercase letter '{letter[0]}' appears {letter[1]} times.")
-        case 3:
-            for number in character_lists()[2]:
+        case "2":
+            print(f"----------------Beginning Report of {file_name}----------------------")
+            print(f"There are {obtain_counts()[0]} lines of text, {obtain_counts()[1]} words\n{obtain_counts()[2]} unique words, and {obtain_counts()[3]} title lines\nin the document.")
+            for letter in character_lists(order)[1]:
+                print(f"The lowercase letter '{letter[0]}' appears {letter[1]} times.")
+        case "3":
+            print(f"----------------Beginning Report of {file_name}----------------------")
+            print(f"There are {obtain_counts()[0]} lines of text, {obtain_counts()[1]} words\n{obtain_counts()[2]} unique words, and {obtain_counts()[3]} title lines\nin the document.")
+            for number in character_lists(order)[2]:
                 print(f"The number '{number[0]}' appears {number[1]} times.")
-        case 4:
-            for char in character_lists()[3]:
+        case "4":
+            print(f"----------------Beginning Report of {file_name}----------------------")
+            print(f"There are {obtain_counts()[0]} lines of text, {obtain_counts()[1]} words\n{obtain_counts()[2]} unique words, and {obtain_counts()[3]} title lines\nin the document.")
+            for char in character_lists(order)[3]:
                 print(f"The character '{char[0]}' appears {char[1]} times.")
-        case 5:
-            for char in character_lists()[4]:
+        case "5":
+            print(f"----------------Beginning Report of {file_name}----------------------")
+            print(f"There are {obtain_counts()[0]} lines of text, {obtain_counts()[1]} words\n{obtain_counts()[2]} unique words, and {obtain_counts()[3]} title lines\nin the document.")
+            for char in character_lists(order)[4]:
                 if char[0] == " ":
                     print(f"There are {char[1]} spaces.")
                 else:
                     print(f"There are {char[1]} newline characters or returns.")
-        case 6:
-            for word in count_words()[0]:
+        case "6":
+            print(f"----------------Beginning Report of {file_name}----------------------")
+            print(f"There are {obtain_counts()[0]} lines of text, {obtain_counts()[1]} words\n{obtain_counts()[2]} unique words, and {obtain_counts()[3]} title lines\nin the document.")
+            for word in count_words(order)[0]:
                 if word[0] == "i":
                     print(f"The word 'I' was used {word[1]} times.")
                 else:
                     print(f"The word '{word[0]}' was used {word[1]} times.")
-        case 7:
-            for letter in all_letter_counts(option):
+        case "7":
+            print(f"----------------Beginning Report of {file_name}----------------------")
+            print(f"There are {obtain_counts()[0]} lines of text, {obtain_counts()[1]} words\n{obtain_counts()[2]} unique words, and {obtain_counts()[3]} title lines\nin the document.")
+            for letter in all_letter_counts(order):
                 print(f"The letter '{letter[0]}' appears {letter[1]} times.")
         # Code is repeated here, because I determined it would take the same amount of code to avoid repeating it.
-        case 8:
-            for letter in character_lists()[0]:
+        case "8":
+            print(f"----------------Beginning Report of {file_name}-----------------------")
+            print(f"There are {obtain_counts()[0]} lines of text, {obtain_counts()[1]} words\n{obtain_counts()[2]} unique words, and {obtain_counts()[3]} title lines\nin the document.")
+            for letter in character_lists(order)[0]:
                     print(f"The letter '{letter[0]}' appears {letter[1]} times.")
-            for number in character_lists()[2]:
+            for number in character_lists(order)[2]:
                     print(f"The number '{number[0]}' appears {number[1]} times.")
-            for char in character_lists()[3]:
+            for char in character_lists(order)[3]:
                     print(f"The character '{char[0]}' appears {char[1]} times.")
-            for char in character_lists()[4]:
+            for char in character_lists(order)[4]:
                 if char[0] == " ":
                     print(f"There are {char[1]} spaces.")
                 else:
@@ -162,7 +191,7 @@ def print_data(option = 8):
     print("---------------------------End of Report--------------------------------")
 
 # creates and output file with a given or default name, will add numerical suffix if file exists
-def output_file(file_name = "report", option = 8, suffix = 0):
+def output_file(file_name, option, suffix = 0):
     if suffix == 0:
         file_name
     elif suffix == 1:
@@ -181,8 +210,9 @@ def output_file(file_name = "report", option = 8, suffix = 0):
         print("And OSError occured: " + e)
         return "Error Creating File"
 
+# searches the input for instances of any word, case insensitive
 def search(term):
-    if term in count_words()[1]:
+    if term.lower().strip() in count_words()[1]:
         print(f"The word '{term}' occurs {count_words()[1][term]} times.")
     else:
         print(f"The word '{term}' could not be found.")
@@ -191,7 +221,59 @@ def search(term):
 def main():
     global path
     path = "books/frankenstein.txt"
-    #path = input("Enter Path:").replace("\\", "/")
-    print(output_file())
+    #path = input("Please enter a path to a .txt file or enter a string to analyze:").replace("\\", "/")
+    while True:
+        alpha_freq = input("Would you like to sort the results alphabetically (1), or by frequency (2)? ")
+        while True:        
+            match alpha_freq:
+                case "1":
+                    alpha_freqtf = False
+                    break
+                case "2":
+                    alpha_freqtf = True
+                    break
+                case _:
+                    alpha_freq = input("Please enter a valid option. (1 or 2)")
+                    continue
+        
+        report = choose_report()
+
+        write_file  = input("Would you like to write the results of this report to a seperate file? (y/N) ").lower().strip()
+        if write_file != "y":
+            print_data(report, alpha_freqtf)
+        elif write_file == "y":
+            file_name = input("Please choose a name for the report file. (Default is 'report') ").strip()
+            if file_name == "":
+                print_data(report, alpha_freqtf)
+                output_file("report", report)
+            else:
+                print_data(report, alpha_freqtf)
+                output_file(file_name, report)
+
+        search_inquiry = input("Would you like to search for a word in the document? (y/N) ").lower().strip()
+        if search_inquiry != "y":
+            pass
+        else:
+            search(input("Enter word to search for:").lower().strip())
+            while True:
+                another_search = input("Continue searching? (y/N) ")
+                if another_search != "y":
+                    break
+                else:
+                    search(input("Enter word to search for:").lower().strip())
+                    continue
+        
+        continue_on = input("Would you like to process another document? (y/N) ").lower().strip()
+        if continue_on == "y":
+            clear_cache()
+            continue
+        else:
+            print("Session Ended. Thank you for using Bookbot!")
+            return
+        
+
+    
+
+
 
 main()
