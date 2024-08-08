@@ -199,12 +199,12 @@ def output_file(file_name, option, suffix = 0):
         file_name = f"{file_name[:-3]}({suffix})"
 
     try:
-        with open(file_name, "x") as file:
+        with open(f"{file_name}.txt", "x") as file:
             with redirect_stdout(file):
                 print_data(option)
         return "File Created"
     except FileExistsError:
-        return output_file(file_name, option, suffix + 1)
+        return output_file(f"{file_name}.txt", option, suffix + 1)
     except OSError as e:
         print("And OSError occured: " + e)
         return "Error Creating File"
