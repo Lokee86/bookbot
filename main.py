@@ -1,4 +1,5 @@
 from functools import lru_cache
+from contextlib import redirect_stdout
 
 # path is read and the results cached
 @lru_cache
@@ -105,7 +106,7 @@ def clear_cache():
         func.cache_clear()
 
 # produces an output based on the selected option
-def print_data(option = True):
+def print_data(option = 8):
     read_book()        
     print(f"-----------------Beginning Report of {file_name}-----------------------")
     print(f"There are {obtain_counts()[0]} lines of text, {obtain_counts()[1]} words\n{obtain_counts()[2]} unique words, and {obtain_counts()[3]} title lines\nin the document.")
@@ -160,19 +161,37 @@ def print_data(option = True):
                 return
     print("---------------------------End of Report--------------------------------")
 
-def output_file():
-    pass
+# creates and output file with a given or default name, will add numerical suffix if file exists
+def output_file(file_name = "report", option = 8, suffix = 0):
+    if suffix == 0:
+        file_name
+    elif suffix == 1:
+        file_name = f"{file_name}({suffix})"
+    else:
+        file_name = f"{file_name[:-3]}({suffix})"
+
+    try:
+        with open(file_name, "x") as file:
+            with redirect_stdout(file):
+                print_data(option)
+        return "File Created"
+    except FileExistsError:
+        return output_file(file_name, option, suffix + 1)
+    except OSError as e:
+        print("And OSError occured: " + e)
+        return "Error Creating File"
 
 def search(term):
     if term in count_words()[1]:
         print(f"The word '{term}' occurs {count_words()[1][term]} times.")
     else:
         print(f"The word '{term}' could not be found.")
+    return
 
 def main():
     global path
     path = "books/frankenstein.txt"
     #path = input("Enter Path:").replace("\\", "/")
-    print_data(1)
+    print(output_file())
 
 main()
