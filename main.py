@@ -18,13 +18,26 @@ def obtain_counts():
 
 def count_characters():
     character_counts = {}
-    for character in read_book().lower():
+    for character in read_book():
         if character not in character_counts:
             character_counts[character] = 1
         else:
             character_counts[character] += 1
-    return character_counts
+    return sorted(list(character_counts.items()), key=lambda x: x[1], reverse=True)
 
+def character_lists():
+    alpha_chars = []
+    number_chars = []
+    other_chars = []
+    for character in count_characters():
+        if character[0].isalpha():
+            alpha_chars.append(character)
+        elif character[0].isdecimal():
+            number_chars.append(character)
+        elif character[0] != " " and character[0 != "\n"]:
+            other_chars.append(character)
+    return alpha_chars, number_chars, other_chars
 
 print(obtain_counts())
 print(count_characters())
+print (character_lists())
