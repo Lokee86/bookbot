@@ -126,7 +126,7 @@ def report_header():
     print(f"There are {obtain_counts()[0]} lines of text, {obtain_counts()[1]} words\n{obtain_counts()[2]} unique words, and {obtain_counts()[3]} title lines\nin the document.")
 
 # produces an output based on the selected option
-def print_data(option = 8, order = True):
+def print_data(option = "8", order = True):
     read_book() 
     match option:
         case "1":
@@ -179,7 +179,7 @@ def print_data(option = 8, order = True):
                     print(f"There are {char[1]} spaces.")
                 else:
                     print(f"There are {char[1]} newline characters or returns.")
-            for word in count_words()[0]:
+            for word in count_words(order)[0]:
                 if word[0] == "i":
                     print(f"The word 'I' was used {word[1]} times.")
                 else:
@@ -190,7 +190,7 @@ def print_data(option = 8, order = True):
     print("---------------------------End of Report--------------------------------")
 
 # creates and output file with a given or default name, will add numerical suffix if file exists
-def output_file(file_name, option, suffix = 0):
+def output_file(file_name, option, option2 = True, suffix = 0):
     if suffix == 0:
         file_name
     elif suffix == 1:
@@ -199,12 +199,12 @@ def output_file(file_name, option, suffix = 0):
         file_name = f"{file_name[:-3]}({suffix})"
 
     try:
-        with open(f"{file_name}.txt", "x") as file:
+        with open(file_name, "x") as file:
             with redirect_stdout(file):
-                print_data(option)
+                print_data(option, option2)
         return "File Created"
     except FileExistsError:
-        return output_file(f"{file_name}.txt", option, suffix + 1)
+        return output_file(file_name, option, suffix + 1)
     except OSError as e:
         print("And OSError occured: " + e)
         return "Error Creating File"
@@ -243,10 +243,10 @@ def main():
             file_name = input("Please choose a name for the report file. (Default is 'report') ").strip()
             if file_name == "":
                 print_data(report, alpha_freqtf)
-                output_file("report", report)
+                output_file("report", report, alpha_freqtf)
             else:
                 print_data(report, alpha_freqtf)
-                output_file(file_name, report)
+                output_file(file_name, report, alpha_freqtf)
 
         search_inquiry = input("Would you like to search for a word in the document? (y/N) ").lower().strip()
         if search_inquiry != "y":
