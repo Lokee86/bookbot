@@ -87,7 +87,7 @@ def character_lists(option = True):
             other_chars.append(character)
         else:
             invis_chars.append(character)
-    return upper_chars, lower_chars, number_chars, other_chars, invis_chars, count_words(option)
+    return upper_chars, lower_chars, number_chars, other_chars, invis_chars
 
 # combines upper and lower case, returns total counts
 def all_letter_counts(option = True):
@@ -165,8 +165,16 @@ def print_data(option = "8", order = True):
                         case 1: print(f"The lowercase letter '{letter[0]}' appears {letter[1]} times.")
                         case 2: print(f"The number '{letter[0]}' appears {letter[1]} times.")
                         case 3: print(f"The character '{letter[0]}' appears {letter[1]} times.")
-                        case 4: print(f"There are {letter[1]} {('newline characters or returns', 'spaces')[letter[0]==' ']}.")
-            
+                        case 4: 
+                            if letter[0] == " ":
+                                print(f"There are {letter[1]} spaces.")
+                            else:
+                                print(f"There are {letter[1]} newline characters or returns.")
+                for word in count_words(order)[0]:
+                    if word[0] == "i":
+                        print(f"The word 'I' was used {word[1]} times.")
+                    else:
+                        print(f"The word '{word[0]}' was used {word[1]} times.")
     print("---------------------------End of Report--------------------------------")
 
 # creates and output file with a given or default name, will add numerical suffix if file exists
