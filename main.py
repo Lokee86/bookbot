@@ -128,43 +128,43 @@ def report_header():
 # produces an output based on the selected option
 def print_data(option = "8", order = True):
     read_book() 
-    match option:
-        case "1":
+    match int(option):
+        case 1:
             report_header()
             for letter in character_lists(order)[0]:
                 print(f"The uppercase letter '{letter[0]}' appears {letter[1]} times.")
-        case "2":
+        case 2:
             report_header()
             for letter in character_lists(order)[1]:
                 print(f"The lowercase letter '{letter[0]}' appears {letter[1]} times.")
-        case "3":
+        case 3:
             report_header()
             for number in character_lists(order)[2]:
                 print(f"The number '{number[0]}' appears {number[1]} times.")
-        case "4":
+        case 4:
             report_header()
             for char in character_lists(order)[3]:
                 print(f"The character '{char[0]}' appears {char[1]} times.")
-        case "5":
+        case 5:
             report_header()
             for char in character_lists(order)[4]:
                 if char[0] == " ":
                     print(f"There are {char[1]} spaces.")
                 else:
                     print(f"There are {char[1]} newline characters or returns.")
-        case "6":
+        case 6:
             report_header()
             for word in count_words(order)[0]:
                 if word[0] == "i":
                     print(f"The word 'I' was used {word[1]} times.")
                 else:
                     print(f"The word '{word[0]}' was used {word[1]} times.")
-        case "7":
+        case 7:
             report_header()
             for letter in all_letter_counts(order):
                 print(f"The letter '{letter[0]}' appears {letter[1]} times.")
         # Code is repeated here, because I determined it would take the same amount of code to avoid repeating it.
-        case "8":
+        case 8:
             report_header()
             for letter in character_lists(order)[0]:
                 print(f"The uppercase letter '{letter[0]}' appears {letter[1]} times.")
@@ -190,24 +190,29 @@ def print_data(option = "8", order = True):
     print("---------------------------End of Report--------------------------------")
 
 # creates and output file with a given or default name, will add numerical suffix if file exists
-def output_file(file_name, option, option2 = True, suffix = 0):
+def output_file(file_name = "report", option = 8, option2 = True, suffix = 0):
     if suffix == 0:
-        file_name
-    elif suffix == 1:
-        file_name = f"{file_name}({suffix})"
+        try:
+            with open(file_name + ".txt", "x") as file:
+                with redirect_stdout(file):
+                    print_data(option, option2)
+                return
+        except FileExistsError:
+            output_file(file_name, option, option2, suffix + 1)
+        except OSError as e:
+            print("And OSError occured: " + e)
+            return "File created"
     else:
-        file_name = f"{file_name[:-3]}({suffix})"
-
-    try:
-        with open(file_name, "x") as file:
-            with redirect_stdout(file):
-                print_data(option, option2)
-        return "File Created"
-    except FileExistsError:
-        return output_file(file_name, option, suffix + 1)
-    except OSError as e:
-        print("And OSError occured: " + e)
-        return "Error Creating File"
+        try:
+            with open(f"{file_name}({suffix}).txt", "x") as file:
+                with redirect_stdout(file):
+                    print_data(option, option2)
+                return "File created"
+        except FileExistsError:
+            output_file(file_name, option, option2, suffix + 1)
+        except OSError as e:
+            print("And OSError occured: " + e)
+            return
 
 # searches the input for instances of any word, case insensitive
 def search(term):
