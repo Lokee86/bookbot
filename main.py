@@ -170,11 +170,11 @@ def print_data(option = "8", order = True):
                                 print(f"There are {letter[1]} spaces.")
                             else:
                                 print(f"There are {letter[1]} newline characters or returns.")
-                for word in count_words(order)[0]:
-                    if word[0] == "i":
-                        print(f"The word 'I' was used {word[1]} times.")
-                    else:
-                        print(f"The word '{word[0]}' was used {word[1]} times.")
+            for word in count_words(order)[0]:
+                if word[0] == "i":
+                    print(f"The word 'I' was used {word[1]} times.")
+                else:
+                    print(f"The word '{word[0]}' was used {word[1]} times.")
     print("---------------------------End of Report--------------------------------")
 
 # creates and output file with a given or default name, will add numerical suffix if file exists
@@ -184,12 +184,12 @@ def output_file(file_name = "report", option = 8, option2 = True, suffix = 0):
             with open(file_name + ".txt", "x") as file:
                 with redirect_stdout(file):
                     print_data(option, option2)
-                return
+                return "File created"
         except FileExistsError:
             output_file(file_name, option, option2, suffix + 1)
         except OSError as e:
             print("And OSError occured: " + e)
-            return "File created"
+            return 
     else:
         try:
             with open(f"{file_name}({suffix}).txt", "x") as file:
