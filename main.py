@@ -122,7 +122,7 @@ def choose_report():
     return input("Please choose what you would like to report from the above list. (May only choose 1) ")
 
 # produces an output based on the selected option
-def print_data(option = "8", order = True):
+def print_data(option = 8, order = True):
     read_book() 
     if int(option) not in range(1, 9):
         print("Invalid Option, Please Choose a Valid Option.")
@@ -178,29 +178,22 @@ def print_data(option = "8", order = True):
     print("---------------------------End of Report--------------------------------")
 
 # creates and output file with a given or default name, will add numerical suffix if file exists
-def output_file(file_name = "report", option = 8, option2 = True, suffix = 0):
+def output_file(name_file = "report", option = 8, option2 = True, suffix = 0):
     if suffix == 0:
-        try:
-            with open(file_name + ".txt", "x") as file:
-                with redirect_stdout(file):
-                    print_data(option, option2)
-                return "File created"
-        except FileExistsError:
-            output_file(file_name, option, option2, suffix + 1)
-        except OSError as e:
-            print("An OSError occured: " + e)
-            return 
-    else:
-        try:
-            with open(f"{file_name}({suffix}).txt", "x") as file:
-                with redirect_stdout(file):
-                    print_data(option, option2)
-                return "File created"
-        except FileExistsError:
-            output_file(file_name, option, option2, suffix + 1)
-        except OSError as e:
-            print("An OSError occured: " + e)
-            return
+        file_name = f"{name_file}.txt"
+    else:  
+        file_name = f"{name_file}({suffix}).txt"
+        
+    try:
+        with open(file_name, "x") as file:
+            with redirect_stdout(file):
+                print_data(option, option2)
+            return "File created"
+    except FileExistsError:
+        output_file(name_file, option, option2, suffix + 1)
+    except OSError as e:
+        print("An OSError occured: " + e)
+        return
 
 # searches the input for instances of any word, case insensitive
 def search(term):
@@ -263,5 +256,5 @@ def main():
             print("Session Ended. Thank you for using Bookbot!")
             return
         
-main()
-
+if __name__ == "__main__":
+    main()
