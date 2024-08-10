@@ -111,15 +111,15 @@ def clear_cache():
 
 # allows for a choice of output report
 def choose_report():
-    print("1. All uppercase letters and their frequency.")
-    print("2. All lowercase letters and their frequency.")
-    print("3. All numerals and their frequency.")
-    print("4. All non-alphanumeric ASCII characters and their frequency.")
-    print("5. All spaces and newline characters (returns) and their frequency.")
-    print("6. All unique words and their frequency.")
-    print("7. All letters and their frequency.")
-    print("8. All of the above choices. (Excluding #7)")
-    return input("Please choose what you would like to report from the above list. (May only choose 1)." )
+    print("""1. All uppercase letters and their frequency.
+    2. All lowercase letters and their frequency.
+    3. All numerals and their frequency.
+    4. All non-alphanumeric ASCII characters and their frequency.
+    5. All spaces and newline characters (returns) and their frequency.
+    6. All unique words and their frequency. (Recommend outputting to file"
+    7. All letters and their frequency.
+    8. All of the above choices. (Excluding #7)""")
+    return input("Please choose what you would like to report from the above list. (May only choose 1) ")
 
 # produces an output based on the selected option
 def print_data(option = "8", order = True):
@@ -188,7 +188,7 @@ def output_file(file_name = "report", option = 8, option2 = True, suffix = 0):
         except FileExistsError:
             output_file(file_name, option, option2, suffix + 1)
         except OSError as e:
-            print("And OSError occured: " + e)
+            print("An OSError occured: " + e)
             return 
     else:
         try:
@@ -199,7 +199,7 @@ def output_file(file_name = "report", option = 8, option2 = True, suffix = 0):
         except FileExistsError:
             output_file(file_name, option, option2, suffix + 1)
         except OSError as e:
-            print("And OSError occured: " + e)
+            print("An OSError occured: " + e)
             return
 
 # searches the input for instances of any word, case insensitive
