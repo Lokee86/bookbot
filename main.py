@@ -111,22 +111,21 @@ def clear_cache():
 
 # allows for a choice of output report
 def choose_report():
-    print("""1. All uppercase letters and their frequency.
+    print("""    
+    1. All uppercase letters and their frequency.
     2. All lowercase letters and their frequency.
     3. All numerals and their frequency.
     4. All non-alphanumeric ASCII characters and their frequency.
     5. All spaces and newline characters (returns) and their frequency.
     6. All unique words and their frequency. (Recommend outputting to file"
     7. All letters and their frequency.
-    8. All of the above choices. (Excluding #7)""")
+    8. All of the above choices. (Excluding #7)
+    """)
     return input("Please choose what you would like to report from the above list. (May only choose 1) ")
 
 # produces an output based on the selected option
 def print_data(option = 8, order = True):
-    read_book() 
-    if int(option) not in range(1, 9):
-        print("Invalid Option, Please Choose a Valid Option.")
-        return
+    read_book()
     print(f"----------------Beginning Report of {file_name}----------------------")
     print(f"There are {obtain_counts()[0]} lines of text, {obtain_counts()[1]} words\n{obtain_counts()[2]} unique words, and {obtain_counts()[3]} title lines\nin the document.")
     match int(option):
@@ -222,6 +221,12 @@ def main():
                     continue
         
         report = choose_report()
+        while True:
+            if not 8 >= int(report) >= 1:
+                report = input("Please choose a valid option. ")
+                continue
+            else:
+                break
 
         write_file  = input("Would you like to write the results of this report to a seperate file? (y/N) ").lower().strip()
         if write_file != "y":
@@ -239,13 +244,13 @@ def main():
         if search_inquiry != "y":
             pass
         else:
-            search(input("Enter word to search for:").lower().strip())
+            search(input("Enter word to search for: ").lower().strip())
             while True:
                 another_search = input("Continue searching? (y/N) ")
                 if another_search != "y":
                     break
                 else:
-                    search(input("Enter word to search for:").lower().strip())
+                    search(input("Enter another word to search for: ").lower().strip())
                     continue
         
         continue_on = input("Would you like to process another document? (y/N) ").lower().strip()
