@@ -177,7 +177,7 @@ def print_data(option = 8, order = True):
     print("---------------------------End of Report--------------------------------")
 
 # creates and output file with a given or default name, will add numerical suffix if file exists
-def output_file(name_file = "report", option = 8, option2 = True, suffix = 0):
+def output_file(option, option2 = True, name_file = "report", suffix = 0):
     if suffix == 0:
         file_name = f"{name_file}.txt"
     else:  
@@ -189,7 +189,7 @@ def output_file(name_file = "report", option = 8, option2 = True, suffix = 0):
                 print_data(option, option2)
             return "File created"
     except FileExistsError:
-        output_file(name_file, option, option2, suffix + 1)
+        output_file(option, option2, name_file, suffix + 1)
     except OSError as e:
         print("An OSError occured: " + e)
         return
@@ -222,11 +222,16 @@ def main():
         
         report = choose_report()
         while True:
-            if not 8 >= int(report) >= 1:
+            try:
+                if not 8 >= int(report) >= 1:
+                    report = input("Please choose a valid option. ")
+                    continue
+                else:
+                    break
+            except ValueError:
                 report = input("Please choose a valid option. ")
                 continue
-            else:
-                break
+            
 
         write_file  = input("Would you like to write the results of this report to a seperate file? (y/N) ").lower().strip()
         if write_file != "y":
@@ -235,10 +240,10 @@ def main():
             file_name = input("Please choose a name for the report file. (Default is 'report') ").strip()
             if file_name == "":
                 print_data(report, alpha_freqtf)
-                output_file("report", report, alpha_freqtf)
+                output_file(report, alpha_freqtf)
             else:
                 print_data(report, alpha_freqtf)
-                output_file(file_name, report, alpha_freqtf)
+                output_file(report, alpha_freqtf, file_name)
 
         search_inquiry = input("Would you like to search for a word in the document? (y/N) ").lower().strip()
         if search_inquiry != "y":
